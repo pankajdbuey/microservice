@@ -57,7 +57,8 @@ func TestGetPet(t *testing.T) {
 			status, http.StatusOK)
 	}
 
-	expected := `[{"_id":"61993177341fd4e12e2c734b","type":"Dog","breed":"Beagle","birthdate":"2011-01-19T00:00:00Z"}]`
+	expected := "[{\"_id\":\"61993177341fd4e12e2c734b\",\"type\":\"Dog\",\"breed\":\"Beagle\",\"birthdate\":\"2011-01-19T00:00:00Z\"}]\n"
+
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
