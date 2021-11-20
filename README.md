@@ -1,5 +1,5 @@
 # microservice
-microservice is responsible for CRUD operation of Pet Information. 
+microservice is responsible for CRUD operation of Pet Information.  
 Pet Schema :- 
   type: string. e.g. "dog", "cat"
   breed: string. e.g. "beagle", "tabby"
