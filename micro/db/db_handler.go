@@ -14,10 +14,15 @@ import (
 )
 
 var (
+	//i IDB
 	collection *mongo.Collection
 	ctx        context.Context
 	cancel     context.CancelFunc
 )
+
+// type IDB interface{
+// 	Get(id primitive.ObjectID) (*Pet, error)
+// }
 
 type Pet struct {
 	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
@@ -27,10 +32,11 @@ type Pet struct {
 }
 
 func init() {
+	// i = &Pet{}
 	//var cancel context.CancelFunc
 	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	// defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://db_server:27017"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
 	// defer func() {
 	// 	if err = client.Disconnect(ctx); err != nil {
 	// 		panic(err)
@@ -45,14 +51,12 @@ func init() {
 	if err != nil {
 		fmt.Println("Error: not able to ping server, ", err)
 		return
-	} else {
-		fmt.Println("able to ping, letc see")
 	}
 	collection = client.Database("petdatastore").Collection("pet")
 
 }
 
-func (p *Pet) Insert() (primitive.ObjectID, error) {
+func (*Pet) Insert(p *Pet) (primitive.ObjectID, error) {
 	// defer func() {
 	// 	if err := client.Disconnect(ctx); err != nil {
 	// 		panic(err)
@@ -143,7 +147,7 @@ func (p *Pet) Delete(id primitive.ObjectID) (int64, error) {
 
 }
 
-func (p Pet) Update(id primitive.ObjectID) (*Pet, error) {
+func (*Pet) Update(p *Pet) (*Pet, error) {
 	// defer func() {
 	// 	if err := client.Disconnect(ctx); err != nil {
 	// 		panic(err)
@@ -154,7 +158,7 @@ func (p Pet) Update(id primitive.ObjectID) (*Pet, error) {
 		u := bson.D{
 			{"$set", bson.D{{"type", p.Type}, {"breed", p.Breed}, {"birthdate", p.BirthDate}}},
 		}
-		f := bson.M{"_id": id}
+		f := bson.M{"_id": p.ID}
 		_, err := collection.UpdateOne(
 			context.Background(), f,
 			u,
@@ -162,7 +166,7 @@ func (p Pet) Update(id primitive.ObjectID) (*Pet, error) {
 		if err != nil {
 			return nil, err
 		}
-		return &p, nil
+		return p, nil
 
 	}
 
