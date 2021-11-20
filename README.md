@@ -38,7 +38,7 @@ Note :- Please use all the docker command as it is, do not change linked db serv
   "breed": "local",  
   "birthdate": "2019-10-12T07:20:50.52Z"  
 }  
-- ReadAll: endpoint -> http://<hostmachine ip address>:8000/pet Method -> GET  (get all resources)  
+- ReadAll: endpoint -> http://\<hostmachine ip address>:8000/pet Method -> GET  (get all resources)  
 - Read by ID: endpoint -> http://<hostmachine ip address>:8000/pet/{id} Method -> GET  
 - example http://<hostmachine ip address>:8000/pet/619881251544fb867ac4c01e  
 - Edit: endpoint -> http://<hostmachine ip address>:8000/pet/{id} Method -> PUT Body -> {  
