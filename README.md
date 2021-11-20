@@ -8,7 +8,7 @@ Pet Schema :-
 # Database  
 making use of mongo db for storage    
 Pull mongo db image - docker pull mongo  
-Run - docker run -p27017:27017 -dit --name db_server  mongo  
+Run - **docker run -p27017:27017 -dit --name db_server  mongo**  
 Note :- please use the command as it , because code is internally making use of db_server name, in future this variable will be reading from envirnment  
   
 Now our mongo db server is up and running  
