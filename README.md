@@ -7,7 +7,7 @@ Pet Schema :-
   
 # Database  
 making use of mongo db for storage    
-Pull mongo db image - docker pull mongo  
+Pull mongo db image - **docker pull mongo**  
 Run - **docker run -p27017:27017 -dit --name db_server  mongo**  
 Note :- please use the command as it , because code is internally making use of db_server name, in future this variable will be reading from envirnment  
   
@@ -19,16 +19,16 @@ Now our mongo db server is up and running
 clone the repo  
 cd to micro  
 execute below command to generate binary in for linux  
-go env -w GOOS=linux  
-go env -w CGO_ENABLED=0  
+**go env -w GOOS=linux  
+go env -w CGO_ENABLED=0**  
 run go build  
 it will create a binary micro (linux)  
 keep Dockerfile inside docker and micro binary in same folder  
-run  docker build -t myservice:1.0.  
+run  **docker build -t myservice:1.0.**  
   
 Now our container image with name myservice and tag 1.0 ready  
 Run below command to run our application which will be interacting with the mongo db in order to read/modify data  
-docker run -p8000:8000 -dit --name db_client --link db_server test:1.0  
+**docker run -p8000:8000 -dit --name db_client --link db_server test:1.0**  
   
 Note :- Please use all the docker command as it is, do not change linked db server name  
   
