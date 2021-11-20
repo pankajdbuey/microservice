@@ -23,10 +23,10 @@ Now our mongo db server is up and running
 go env -w CGO_ENABLED=0**  
 - run go build  
 it will create a binary micro (linux)  
-- keep Dockerfile inside docker and micro binary in same folder  
+- keep Dockerfile,  which we can find under docker folder and generated micro binary both in same the folder  
 - run  **docker build -t myservice:1.0.**  
   
-- Now our container image with name myservice and tag 1.0 ready  
+- Now our container image with name myservice and tag 1.0 is ready  
 - Run below command to run our application which will be interacting with the mongo db in order to read/modify data  
 - **docker run -p8000:8000 -dit --name db_client --link db_server test:1.0**  
   
