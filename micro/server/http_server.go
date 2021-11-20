@@ -13,6 +13,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type IDBOperation interface {
+	Get(id primitive.ObjectID) (*db.Pet, error)
+	GetAll() ([]db.Pet, error)
+	Insert(*db.Pet) (primitive.ObjectID, error)
+	Delete(id primitive.ObjectID) (int64, error)
+	Update(*db.Pet) (*db.Pet, error)
+
+}
+
+var iDB IDBOperation
+
+func init() {
+	iDB = &db.Pet{}
+}
+
 func NewMux() http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/pet", GetPetAll).Methods("GET")
@@ -49,7 +64,7 @@ func CreatePet(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	fmt.Println("inserting in db ", pet)
-	res, err := pet.Insert()
+	res, err := iDB.Insert(&pet)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
@@ -62,8 +77,7 @@ func CreatePet(response http.ResponseWriter, request *http.Request) {
 }
 
 func GetPetAll(response http.ResponseWriter, request *http.Request) {
-	pet := db.Pet{}
-	res, err := pet.GetAll()
+	res, err := iDB.GetAll()
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
@@ -77,8 +91,7 @@ func GetPetAll(response http.ResponseWriter, request *http.Request) {
 func GetPet(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	pet := db.Pet{}
-	res, err := pet.Get(id)
+	res, err := iDB.Get(id)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
@@ -92,8 +105,7 @@ func GetPet(response http.ResponseWriter, request *http.Request) {
 func DeletePet(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	pet := db.Pet{}
-	res, err := pet.Delete(id)
+	res, err := iDB.Delete(id)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
@@ -119,7 +131,7 @@ func EditPet(response http.ResponseWriter, request *http.Request) {
 	}
 	vars := mux.Vars(request)
 	pet.ID, _ = primitive.ObjectIDFromHex(vars["id"])
-	res, err := pet.Update(pet.ID)
+	res, err := iDB.Update(&pet)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
