@@ -25,7 +25,7 @@ go env -w CGO_ENABLED=0**
 it will create a binary micro (linux) 
 - Give permission to generated binary, **chmod +x micro**   
 - keep Dockerfile,  which we can find under docker folder and generated micro binary both in same the folder  
-- run  **docker build -t myservice:1.0.**  
+- run  **docker build -t myservice:1.0**  
   
 - Now our container image with name myservice and tag 1.0 is ready  
 - Run below command to run our application which will be interacting with the mongo db in order to read/modify data  
