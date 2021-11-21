@@ -29,7 +29,7 @@ it will create a binary micro (linux)
   
 - Now our container image with name myservice and tag 1.0 is ready  
 - Run below command to run our application which will be interacting with the mongo db in order to read/modify data  
-- **docker run -p8000:8000 -dit --name db_client --link db_server test:1.0**  
+- **docker run -p8000:8000 -dit --name db_client --link db_server myservice:1.0**  
   
 Note :- Please use all the docker command as it is, do not change linked db server name  
   
