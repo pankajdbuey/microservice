@@ -81,6 +81,7 @@ func GetPetAll(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
+		return
 	}
 
 	response.Header().Add("Content-Type", "application/json")
@@ -95,6 +96,7 @@ func GetPet(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
+		return
 	}
 
 	response.Header().Add("Content-Type", "application/json")
@@ -109,6 +111,7 @@ func DeletePet(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
+		return
 	}
 	response.Header().Add("Content-Type", "application/json")
 	str := fmt.Sprintf("resource %s deleted successfully", params["id"])
@@ -121,6 +124,7 @@ func EditPet(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		response.WriteHeader(http.StatusBadRequest)
 		response.Write([]byte(err.Error()))
+		return
 	}
 	pet := db.Pet{}
 	err = json.Unmarshal(b, &pet)
