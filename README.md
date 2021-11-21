@@ -22,7 +22,8 @@ Now our mongo db server is up and running
 **go env -w GOOS=linux  
 go env -w CGO_ENABLED=0**  
 - run go build  
-it will create a binary micro (linux)  
+it will create a binary micro (linux) 
+- Give permission to generated binary, chmod +x micro   
 - keep Dockerfile,  which we can find under docker folder and generated micro binary both in same the folder  
 - run  **docker build -t myservice:1.0.**  
   
