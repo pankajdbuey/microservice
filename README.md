@@ -34,12 +34,17 @@ it will create a binary micro (linux)
 Note :- Please use all the docker command as it is, do not change linked db server name  
   
 # API endpoints  
-- Create: endpoint -> http://<hostmachine ip address>:8000/pet Method -> POST Body -> {  
+- Create: url -> http://\<hostmachine ip address>:8000/pet Method    
+  Body -> {  
   "type" : "dog",  
   "breed": "local",  
   "birthdate": "2019-10-12T07:20:50.52Z"  
-}  
-- ReadAll: endpoint -> http://\<hostmachine ip address>:8000/pet Method -> GET  (get all resources)  
+  }  
+  Method -> POST
+  Headers ->    
+   -H "Accept:application/json"  
+   -H "Content-Type:application/json"     
+- ReadAll: url -> http://\<hostmachine ip address>:8000/pet Method -> GET  (get all resources)  
 - Read by ID: endpoint -> http://\<hostmachine ip address>:8000/pet/{id} Method -> GET  
   example http://\<hostmachine ip address>:8000/pet/619881251544fb867ac4c01e  
 - Edit: endpoint -> http://\<hostmachine ip address>:8000/pet/{id} Method -> PUT Body -> {  
