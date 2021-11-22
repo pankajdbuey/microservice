@@ -28,7 +28,7 @@ func (*mock) Get(id primitive.ObjectID) (*db.Pet, error) {
 	return nil, nil
 }
 
-func (*mock) Insert(*db.Pet) (primitive.ObjectID, error) {
+func (*mock) Insert(db.Pet) (primitive.ObjectID, error) {
 	return primitive.ObjectID{}, nil
 }
 
@@ -36,8 +36,8 @@ func (*mock) Delete(id primitive.ObjectID) (int64, error) {
 	return 0, nil
 }
 
-func (*mock) Update(*db.Pet) (*db.Pet, error) {
-	return nil, nil
+func (*mock) Update(db.Pet) (int64, error) {
+	return 0, nil
 }
 
 func init() {
