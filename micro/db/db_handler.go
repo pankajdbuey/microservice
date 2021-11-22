@@ -20,9 +20,6 @@ var (
 	cancel     context.CancelFunc
 )
 
-// type IDB interface{
-// 	Get(id primitive.ObjectID) (*Pet, error)
-// }
 
 type Pet struct {
 	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
@@ -32,16 +29,8 @@ type Pet struct {
 }
 
 func init() {
-	// i = &Pet{}
-	//var cancel context.CancelFunc
 	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
-	// defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://db_server:27017"))
-	// defer func() {
-	// 	if err = client.Disconnect(ctx); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		fmt.Println("Error: while connecting to database", err)
 		return
@@ -56,13 +45,7 @@ func init() {
 
 }
 
-func (*Pet) Insert(p *Pet) (primitive.ObjectID, error) {
-	// defer func() {
-	// 	if err := client.Disconnect(ctx); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
-	// defer cancel()
+func (*Pet) Insert(p Pet) (primitive.ObjectID, error) {
 
 	if collection != nil {
 		res, err := collection.InsertOne(context.Background(), p)
@@ -79,12 +62,6 @@ func (*Pet) Insert(p *Pet) (primitive.ObjectID, error) {
 }
 
 func (p *Pet) GetAll() ([]Pet, error) {
-	// defer func() {
-	// 	if err := client.Disconnect(ctx); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
-	// defer cancel()
 	var pets []Pet
 	if collection != nil {
 		cursor, err := collection.Find(context.Background(), bson.M{})
@@ -109,12 +86,6 @@ func (p *Pet) GetAll() ([]Pet, error) {
 }
 
 func (p *Pet) Get(id primitive.ObjectID) (*Pet, error) {
-	// defer func() {
-	// 	if err := client.Disconnect(ctx); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
-	// defer cancel()
 	var pet Pet
 	if collection != nil {
 		err := collection.FindOne(context.Background(), Pet{ID: id}).Decode(&pet)
@@ -129,12 +100,6 @@ func (p *Pet) Get(id primitive.ObjectID) (*Pet, error) {
 }
 
 func (p *Pet) Delete(id primitive.ObjectID) (int64, error) {
-	// defer func() {
-	// 	if err := client.Disconnect(ctx); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
-	// defer cancel()
 	if collection != nil {
 		r, err := collection.DeleteOne(context.Background(), Pet{ID: id})
 		if err != nil {
@@ -147,29 +112,23 @@ func (p *Pet) Delete(id primitive.ObjectID) (int64, error) {
 
 }
 
-func (*Pet) Update(p *Pet) (*Pet, error) {
-	// defer func() {
-	// 	if err := client.Disconnect(ctx); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
-	// defer cancel()
+func (*Pet) Update(p Pet) (int64, error) {
 	if collection != nil {
 		u := bson.D{
 			{"$set", bson.D{{"type", p.Type}, {"breed", p.Breed}, {"birthdate", p.BirthDate}}},
 		}
 		f := bson.M{"_id": p.ID}
-		_, err := collection.UpdateOne(
+		ur, err := collection.UpdateOne(
 			context.Background(), f,
 			u,
 		)
 		if err != nil {
-			return nil, err
+			return 0, err
 		}
-		return p, nil
+		return ur.ModifiedCount, nil
 
 	}
 
-	return nil, errors.New("did not get db instance, please check if the db is up and running")
+	return 0, errors.New("did not get db instance, please check if the db is up and running")
 
 }
