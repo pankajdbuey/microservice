@@ -16,10 +16,9 @@ import (
 type IDBOperation interface {
 	Get(id primitive.ObjectID) (*db.Pet, error)
 	GetAll() ([]db.Pet, error)
-	Insert(*db.Pet) (primitive.ObjectID, error)
+	Insert(db.Pet) (primitive.ObjectID, error)
 	Delete(id primitive.ObjectID) (int64, error)
-	Update(*db.Pet) (*db.Pet, error)
-
+	Update(db.Pet) (int64, error)
 }
 
 var iDB IDBOperation
@@ -64,7 +63,7 @@ func CreatePet(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	fmt.Println("inserting in db ", pet)
-	res, err := iDB.Insert(&pet)
+	res, err := iDB.Insert(pet)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
@@ -85,8 +84,14 @@ func GetPetAll(response http.ResponseWriter, request *http.Request) {
 	}
 
 	response.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(response).Encode(res)
-	log.Println(res)
+	if len(res) == 0 {
+		json.NewEncoder(response).Encode("No entry found")
+		log.Println("No entry found")
+	} else {
+		json.NewEncoder(response).Encode(res)
+		log.Println(res)
+	}
+
 }
 
 func GetPet(response http.ResponseWriter, request *http.Request) {
@@ -107,16 +112,16 @@ func GetPet(response http.ResponseWriter, request *http.Request) {
 func DeletePet(response http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	res, err := iDB.Delete(id)
+	_, err := iDB.Delete(id)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
 		return
 	}
 	response.Header().Add("Content-Type", "application/json")
-	str := fmt.Sprintf("resource %s deleted successfully", params["id"])
+	str := fmt.Sprintf("record %s deleted successfully", params["id"])
 	json.NewEncoder(response).Encode(str)
-	log.Println(res)
+	log.Println(str)
 }
 
 func EditPet(response http.ResponseWriter, request *http.Request) {
@@ -135,13 +140,14 @@ func EditPet(response http.ResponseWriter, request *http.Request) {
 	}
 	vars := mux.Vars(request)
 	pet.ID, _ = primitive.ObjectIDFromHex(vars["id"])
-	res, err := iDB.Update(&pet)
+	_, err = iDB.Update(pet)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(err.Error()))
 		return
 	}
-	json.NewEncoder(response).Encode(*res)
+	s := fmt.Sprintf("record %v modified successfully", vars["id"])
+	json.NewEncoder(response).Encode(s)
 	response.Header().Add("Content-Type", "application/json")
-	log.Println(*res)
+	log.Println(s)
 }
